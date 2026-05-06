@@ -1,0 +1,11 @@
+[project]
+name = "ai-powered-agentic-workflow-for-project-management"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "openai==1.78.1",
+    "pandas==2.2.3",
+    "python-dotenv==1.1.0",
+]
