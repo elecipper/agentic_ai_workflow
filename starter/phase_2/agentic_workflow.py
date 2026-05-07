@@ -201,14 +201,17 @@ print("\nDefining workflow steps from the workflow prompt")
 workflow_steps = action_planning_agent.respond(workflow_prompt)
 
 completed_steps = []
+context = ""
 
 for step in workflow_steps:
+    step_with_context = f"{step}\n\nContext from previous steps:\n{context}" if context else step
     print(f"\nExecuting step: {step}")
-    result = routing_agent.respond(step)
+    result = routing_agent.respond(step_with_context)
     completed_steps.append(result["response"])
+    context += f"\n{result['response']}"
     print(f"Result: {result['response']}")
 
-print("\n*** Final output ***\n")
+print("\n*** Final Email Router Development Plan ***\n")
 for i, step_result in enumerate(completed_steps):
     print(f"--- Step {i+1} ---")
     print(step_result)
