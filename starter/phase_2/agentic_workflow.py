@@ -65,6 +65,7 @@ evaluation_criteria_product_manager = "The answer should contain user stories th
 
 product_manager_evaluation_agent = EvaluationAgent(
     openai_api_key=openai_api_key,
+    persona="You are an evaluation agent that checks the answers of other worker agents.",
     evaluation_criteria=evaluation_criteria_product_manager,
     worker_agent=product_manager_knowledge_agent,
     max_interactions=10
@@ -101,6 +102,7 @@ program_manager_knowledge_agent = KnowledgeAugmentedPromptAgent(
 
 program_manager_evaluation_agent = EvaluationAgent(
     openai_api_key=openai_api_key,
+    persona=persona_program_manager_eval,
     evaluation_criteria=evaluation_criteria_program_manager,
     worker_agent=program_manager_knowledge_agent,
     max_interactions=10
@@ -139,6 +141,7 @@ development_engineer_knowledge_agent = KnowledgeAugmentedPromptAgent(
 
 development_engineer_evaluation_agent = EvaluationAgent(
     openai_api_key=openai_api_key,
+    persona=persona_dev_engineer_eval,
     evaluation_criteria=evaluation_criteria_dev_engineer,
     worker_agent=development_engineer_knowledge_agent,
     max_interactions=10
@@ -202,8 +205,11 @@ completed_steps = []
 for step in workflow_steps:
     print(f"\nExecuting step: {step}")
     result = routing_agent.respond(step)
-    completed_steps.append(result)
-    print(f"Result: {result}")
+    completed_steps.append(result["response"])
+    print(f"Result: {result['response']}")
 
-print("\n*** Final output ***")
-print(completed_steps[-1])
+print("\n*** Final output ***\n")
+for i, step_result in enumerate(completed_steps):
+    print(f"--- Step {i+1} ---")
+    print(step_result)
+    print()

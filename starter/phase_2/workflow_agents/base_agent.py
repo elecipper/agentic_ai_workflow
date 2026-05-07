@@ -58,7 +58,8 @@ class KnowledgeAugmentedPromptAgent:
     
 
 class EvaluationAgent:
-    def __init__(self, openai_api_key: str, evaluation_criteria: str, worker_agent, max_interactions: int):
+    def __init__(self, openai_api_key: str, persona: str, evaluation_criteria: str, worker_agent, max_interactions: int):
+        self.persona = persona
         self.evaluation_criteria = evaluation_criteria
         self.worker = worker_agent
         self.max_interactions = max_interactions

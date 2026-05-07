@@ -20,7 +20,7 @@ knowledge_agent = KnowledgeAugmentedPromptAgent(openai_api_key=openai_api_key, p
 persona = "You are an evaluation agent that checks the answers of other worker agents"
 evaluation_criteria = "The answer should be solely the name of a city, not a sentence."
 
-evaluation_agent = EvaluationAgent(openai_api_key=openai_api_key, evaluation_criteria=evaluation_criteria, worker_agent=knowledge_agent, max_interactions=10)
+evaluation_agent = EvaluationAgent(openai_api_key=openai_api_key, persona=persona, evaluation_criteria=evaluation_criteria, worker_agent=knowledge_agent, max_interactions=10)
 
 
 # TODO: 4 - Evaluate the prompt and print the response from the EvaluationAgent
