@@ -105,17 +105,17 @@ class RoutingAgent:
 
     def respond(self, prompt: str) -> str:
         prompt_embedding = self.get_embedding(prompt)
-        
+
         best_agent = None
         best_score = -1
-        
+
         for agent_info in self.agents:
             agent_embedding = self.get_embedding(agent_info["description"])
             score = sum(a * b for a, b in zip(prompt_embedding, agent_embedding))
             if score > best_score:
                 best_score = score
                 best_agent = agent_info["func"]
-        
+
         return best_agent(prompt)
     
 
@@ -129,7 +129,7 @@ class ActionPlanningAgent:
         response = self.client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": f"You are an Action Planning Agent that extracts steps using the provided knowledge {self.knowledge}."},
+                {"role": "system", "content": f"You are an Action Planning Agent. Using the provided knowledge: {self.knowledge}. Return ONLY a numbered list of exactly 3 high-level steps. No sub-steps, no explanations, no extra text."},
                 {"role": "user", "content": prompt}
             ]
         )

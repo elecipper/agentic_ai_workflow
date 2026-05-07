@@ -184,7 +184,10 @@ routing_agent.agents = [
 print("\n*** Workflow execution started ***\n")
 # Workflow Prompt
 # ****
-workflow_prompt = "What would the development tasks for this product be?"
+workflow_prompt = (
+    "Create a 3-step development plan for the Email Router product: "
+    "Step 1: Define user stories. Step 2: Define product features. Step 3: Define engineering tasks."
+)
 # ****
 print(f"Task to complete in this workflow, workflow prompt = {workflow_prompt}")
 
@@ -201,18 +204,25 @@ print("\nDefining workflow steps from the workflow prompt")
 workflow_steps = action_planning_agent.respond(workflow_prompt)
 
 completed_steps = []
-context = ""
+previous_output = ""
 
-for step in workflow_steps:
-    step_with_context = f"{step}\n\nContext from previous steps:\n{context}" if context else step
+for step in workflow_steps[:3]:
     print(f"\nExecuting step: {step}")
-    result = routing_agent.respond(step_with_context)
+    enriched_step = f"{step}\n\nPrevious step output:\n{previous_output}" if previous_output else step
+    result = routing_agent.respond(enriched_step)
     completed_steps.append(result["response"])
-    context += f"\n{result['response']}"
+    previous_output = result["response"]
     print(f"Result: {result['response']}")
 
+consolidation_agent = KnowledgeAugmentedPromptAgent(
+    openai_api_key=openai_api_key,
+    persona="You are a technical writer producing a structured project plan.",
+    knowledge="\n\n".join(completed_steps)
+)
+final_output = consolidation_agent.respond(
+    "Combine the above into a single Email Router development plan. "
+    "For each feature, show its related user story and associated engineering tasks."
+)
+
 print("\n*** Final Email Router Development Plan ***\n")
-for i, step_result in enumerate(completed_steps):
-    print(f"--- Step {i+1} ---")
-    print(step_result)
-    print()
+print(final_output)
